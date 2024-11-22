@@ -34,14 +34,13 @@
                 try {
                     const jsonData = JSON.parse(content);
 
-                    // Helper function to recursively extract string values
                     const extractStrings = (obj) => {
                         if (Array.isArray(obj)) {
                             obj.forEach(item => {
                                 if (typeof item === "string") {
                                     words.push(item);
                                 } else if (typeof item === "object") {
-                                    extractStrings(item); // Recursively handle nested arrays/objects
+                                    extractStrings(item);
                                 }
                             });
                         } else if (typeof obj === "object" && obj !== null) {
@@ -49,7 +48,7 @@
                                 if (typeof value === "string") {
                                     words.push(value);
                                 } else if (typeof value === "object") {
-                                    extractStrings(value); // Recursively handle nested objects
+                                    extractStrings(value);
                                 }
                             });
                         }
@@ -57,15 +56,13 @@
 
                     extractStrings(jsonData);
                 } catch (e) {
-                    // Handle plain text file
                     words = content
-                        .replace(/,/g, "")  // Remove commas
-                        .split(/\r?\n/)     // Split by new lines
+                        .replace(/,/g, "")
+                        .split(/\r?\n/)
                         .map(line => line.trim())
-                        .filter(line => line.length > 0);  // Filter out empty lines
+                        .filter(line => line.length > 0);
                 }
 
-                // Clean, sort, and output
                 const cleanedWords = words
                     .map(word => word.trim())
                     .filter(word => word !== "")
