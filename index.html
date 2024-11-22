@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alphabetic File Sorter</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1> Alphabetic File Sorter 💖</h1>
+        <input type="file" id="fileInput" accept=".txt,.json" class="file-input">
+        <button onclick="sortFile()" class="sort-button">Sort File ✨</button>
+        <textarea id="output" readonly class="output-box"></textarea>
+    </div>
+
+    <script>
+        function sortFile() {
+            const fileInput = document.getElementById('fileInput');
+            const output = document.getElementById('output');
+
+            if (!fileInput.files[0]) {
+                alert("Please select a file first.");
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                const content = event.target.result;
+
+                let lines = [];
+                try {
+                    const jsonData = JSON.parse(content);
+                    if (Array.isArray(jsonData.animals)) {
+                        lines = jsonData.animals;
+                    } else {
+                        throw new Error("Invalid JSON format");
+                    }
+                } catch (e) {
+                    lines = content.split(/\r?\n/);
+                }
+
+                const sortedLines = lines.filter(line => line.trim() !== "").sort((a, b) => a.localeCompare(b));
+                output.value = sortedLines.join("\n");
+            };
+
+            reader.onerror = function() {
+                alert("An error occurred while reading the file.");
+            };
+
+            reader.readAsText(file);
+        }
+    </script>
+</body>
+</html>
